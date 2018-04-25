@@ -4,10 +4,6 @@ import json
 
 def lambda_handler(event, context):
     tasks = get_tasks(event['jql'],event['fields'])
-    if(event['jql'] == 'issuetype=Reading'):
-        return transformJson(tasks)
-def lambda_handler(event, context):
-    tasks = get_tasks(event['jql'],event['fields'])
     return transformJson(tasks)
 
 def get_tasks(jql, fields, startAt = 0):
