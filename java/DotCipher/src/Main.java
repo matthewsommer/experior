@@ -40,8 +40,11 @@ public class Main {
           .filter(distinctByKey(c -> c.getCy())).map(Circle::getCy)
           .collect(Collectors.toList());
 
-      List<Circle> specialColorCircles = circleList.stream()
+      List<Circle> keyCircles = circleList.stream()
           .filter(circle -> !circle.getFill().contains("#49B882")).collect(Collectors.toList());
+
+      List<Circle> msgCircles = circleList.stream()
+          .filter(circle -> circle.getFill().contains("#49B882")).collect(Collectors.toList());
 
       int distinctColorsCount = fillList.size();
 
@@ -55,20 +58,68 @@ public class Main {
             circleList.stream().filter(circle -> circle.getFill().contains(fill)).count());
       }
 
-      System.out.format("\n\nUnique Colors Count: %d\n", specialColorCircles.size());
-      System.out.format("No Colors Column Count: %d\n", xList.size() - specialColorCircles.size());
+      System.out.format("\n\nUnique Colors Count: %d\n", keyCircles.size());
+      System.out.format("No Colors Column Count: %d\n", msgCircles.stream()
+          .filter(distinctByKey(c -> c.getCx()))
+          .collect(Collectors.toList()).size());
 
       System.out.format("\nRows: %d", yList.size());
-      System.out.format("\nColumns: %d\n", xList.size());
+      System.out.format("\nColumns: %d\n\n", xList.size());
 
       List<List<Circle>> columnsList = new ArrayList<>();
+
+      System.out.format("\n\nColumn Collections: %d\n",columnsList.size());
+
 
       for (Integer x : xList) {
         columnsList.add(
             circleList.stream().filter(circle -> circle.getCx() == x).collect(Collectors.toList()));
       }
 
-      System.out.format("Column Collections: %d\n",columnsList.size());
+      System.out.format("\n\nUnique color columns(64) X value: ");
+
+      for (Circle circle: keyCircles) {
+        System.out.format("%d,", circle.getCx() - 3);
+      }
+
+      System.out.format("\n\nUnique color columns(64) X normalized (divide by 11): ");
+      for (Integer i = 0; i < keyCircles.size(); i++) {
+        System.out.format("%d,", (keyCircles.get(i).getCx())/11);
+      }
+
+      System.out.format("\n\nSpacing between unique color columns(63): ");
+
+      for (Integer i = 1; i < keyCircles.size(); i++) {
+        int value = (keyCircles.get(i).getCx())/11 - 1;
+        System.out.format("%d,", ((keyCircles.get(i).getCx())/11) - (keyCircles.get(i-1).getCx())/11);
+      }
+
+      System.out.format("\n\nSpacing between unique color columns(63) normalized to 0 (minus 1): ");
+      int total = 0;
+      for (Integer i = 1; i < keyCircles.size(); i++) {
+        int i1 = (((keyCircles.get(i).getCx()) / 11)
+            - (keyCircles.get(i - 1).getCx()) / 11) - 1;
+        System.out.format("%d, ", i1);
+
+      }
+
+//      System.out.format("\n\n");
+//
+//      for (Integer i = 1; i < keyCircles.size(); i++) {
+//        int value = (keyCircles.get(i).getCx() - keyCircles.get(i - 1).getCx())/11 - 1;
+//        double v = Math.pow(16, value);
+//        System.out.format("%d,", (int) v);
+//      }
+//
+//      System.out.format("\n\n");
+//
+//      for (Integer i = 1; i < keyCircles.size(); i++) {
+//        int value = (keyCircles.get(i).getCx() - keyCircles.get(i - 1).getCx())/11 - 1;
+//        double v = Math.pow(4, value);
+//        System.out.format("%d,", (int) v);
+//      }
+
+      System.out.format("\n\n\n");
 
     } catch (IOException e) {
       e.printStackTrace();

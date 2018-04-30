@@ -11,5 +11,7 @@
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.3" level="project" />
     <orderEntry type="library" name="com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" name="org.projectlombok:lombok:1.16.4" level="project" />
+    <orderEntry type="library" name="junit:junit:4.12" level="project" />
+    <orderEntry type="library" name="junit:junit:4.121" level="project" />
   </component>
 </module>
