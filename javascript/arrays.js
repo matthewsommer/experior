@@ -1,6 +1,5 @@
 var int_array = [5,2,3,4,3,2,6];
-var object_array = [{first_name:"Matt",last_name:"Sommer"},{first_name:"Rick",last_name:"Sanchez"},{first_name:"Morty",last_name:"Smith"}]
-
+var object_array = [{"first_name":"Matt",last_name:"Sommer"},{"first_name":"Rick","last_name":"Sanchez"},{"first_name":"Morty","last_name":"Smith"}]
 
 //Array Length
 console.log(int_array.length);
@@ -9,8 +8,10 @@ console.log(int_array.length);
 console.log(int_array[0]);
 
 //Array For loop
-for (i = 0; i < int_array.length; i++) {
-    //console.log(array[i]);
+var i; //improves performance
+var l = int_array.length //improves performance
+for (i = 0; i < l; i++) {
+    console.log(int_array[i]);
 }
 
 //Array For/In loop of objects
@@ -27,3 +28,11 @@ console.log(int_array);
 
 //Array determine if is array
 console.log(int_array instanceof Array);
+
+//Array min
+var min = Math.min(...int_array);
+console.log(min);
+
+//Array max
+var max = Math.max(...int_array);
+console.log(max);

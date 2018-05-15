@@ -7,6 +7,24 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "JSON",
+            "program": "${workspaceFolder}/json.js"
+        },
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "Hello World",
+        "program": "${workspaceFolder}/helloworld.js"
+    },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Date",
+            "program": "${workspaceFolder}/date.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Arrays",
             "program": "${workspaceFolder}/arrays.js"
         },
