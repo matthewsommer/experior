@@ -1,0 +1,20 @@
+{
+  "name": "stripe-api",
+  "version": "1.0.0",
+  "description": "Simple example of Stripe API web server",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Stripe forked by Matt Sommer",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "chai": "^4.1.2",
+    "express": "^4.16.3",
+    "mocha": "^5.1.1",
+    "pug": "^2.0.3",
+    "stripe": "^6.0.0",
+    "supertest": "^3.1.0"
+  }
+}
