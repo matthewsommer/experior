@@ -1,5 +1,5 @@
 var int_array = [5,2,3,4,3,2,6];
-var object_array = [{"first_name":"Matt",last_name:"Sommer"},{"first_name":"Rick","last_name":"Sanchez"},{"first_name":"Morty","last_name":"Smith"}]
+var object_array = [{"first_name":"Matt","last_name":"Sommer", "age":34},{"first_name":"Rick","last_name":"Sanchez","age":79},{"first_name":"Morty","last_name":"Smith","age":15}]
 
 //Array Length
 console.log(int_array.length);
@@ -26,6 +26,13 @@ console.log(int_array.sort());
 int_array.push(7);
 console.log(int_array);
 
+function sum(a,b) {
+    return a + b;
+}
+
+//Sum
+console.log(sum(...int_array));
+
 //Array determine if is array
 console.log(int_array instanceof Array);
 
@@ -36,3 +43,6 @@ console.log(min);
 //Array max
 var max = Math.max(...int_array);
 console.log(max);
+
+//Array dict min
+var min_age = Math.min(...int_array);
