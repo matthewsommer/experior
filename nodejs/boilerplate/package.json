@@ -1,0 +1,17 @@
+{
+  "name": "stripe-interview",
+  "version": "1.0.0",
+  "description": "Scratch pad for Stripe interview",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "mocha"
+  ],
+  "author": "Matt Sommer",
+  "license": "ISC",
+  "dependencies": {
+    "mocha": "^5.1.1"
+  }
+}
