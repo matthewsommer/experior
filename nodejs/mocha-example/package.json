@@ -1,0 +1,14 @@
+{
+  "name": "mocha-example",
+  "version": "1.0.0",
+  "description": "A simple mocha example",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mocha": "^5.1.1"
+  }
+}
