@@ -9,7 +9,7 @@ describe("persons tests", function() {
         assert(14 === personsController.min_age(people));
         assert.notEqual(70 === personsController.min_age(people));
     });
-    it("return max age of persons", function maxAgeTest() {
+    it("returns max age of persons", function maxAgeTest() {
         assert(70 === personsController.max_age(people));
         assert.notEqual(14 === personsController.max_age(people));
     });
