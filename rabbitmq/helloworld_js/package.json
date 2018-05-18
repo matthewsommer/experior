@@ -1,0 +1,14 @@
+{
+  "name": "helloworld_js",
+  "version": "1.0.0",
+  "description": "Simple RabbitMQ Hello World written in Javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Matt Sommer",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.2"
+  }
+}
