@@ -43,7 +43,8 @@ exports.sourceNodes = async ({ boundActionCreators }) => {
             },
             children: [],
             id: task.id,
-            summary: task.fields.summary
+            summary: task.fields.summary,
+            project: task.fields.project.name
         }
 
         // Get content digest of node. (Required field)
@@ -53,6 +54,8 @@ exports.sourceNodes = async ({ boundActionCreators }) => {
             .digest(`hex`);
         // add it to taskNode
         taskNode.internal.contentDigest = contentDigest;
+        taskNode.description = task.fields.description;
+        taskNode.author = task.fields.customfield_10100;
 
         // Create node with the gatsby createNode() API
         createNode(taskNode);

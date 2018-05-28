@@ -13,7 +13,9 @@ const IndexPage = (props) => {
         const taskData = task.node;
         return (
           <div key={i}>
-            <p>{i}: {taskData.summary}</p>
+            <h4>{taskData.summary}</h4>
+            <p>{taskData.author}</p>
+            <p>{taskData.description}</p>
           </div>
         )
       })}
@@ -26,14 +28,13 @@ export default IndexPage
 export const query = graphql`
     query TaskQuery {
       allTask {
-        totalCount
-        pageInfo {
-          hasNextPage
-        }
         edges {
           node {
             id
             summary
+            description
+            project
+            author
           }
         }
       }
