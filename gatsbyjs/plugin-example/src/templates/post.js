@@ -13,17 +13,18 @@ export default ({ data }) => {
     return (
         <div>
             {epic != null ? <a href={epic.id}>{epic.summary}</a> : ""}
-            <h1 style={{marginBottom: 5}}>{task.summary}</h1>
+            <h1 style={{marginBottom: 10}}>{task.summary}</h1>
             <div>{task.project + " " + task.type}</div>
             <div>
-                <h2 style={{marginBottom: 5,marginTop:10}}>Description</h2>
+                {task.description != null ? <h3 style={{marginBottom: 10,marginTop:15}}>Description</h3> : ""}
                 {task.description}
+                <h3 style={{marginBottom: 10,marginTop:15}}>Details</h3>
                 <ul>
-                    <li><a href={'https://timetopretend.atlassian.net/browse/' + task.key} target='_blank'>{task.key}</a></li>
-                    <li>{task.priority}</li>
-                    <li>{task.status}</li>
-                    <li>{task.components.map((component, i) => { return component.name + " " })}</li>
-                    <li>{task.labels.map((label, i) => { return label + " " })}</li>
+                    <li><a href={'https://timetopretend.atlassian.net/browse/' + task.key} target='_blank'>Jira Link: {task.key}</a></li>
+                    <li><b>Priority:</b> {task.priority}</li>
+                    <li><b>Status:</b> {task.status}</li>
+                    <li><b>Components:</b> {task.components.map((component, i) => { return (<a href={component.description} target='_blank'>{component.name}, </a>) })}</li>
+                    <li><b>Labels:</b> {task.labels.map((label, i) => { return label + " " })}</li>
                 </ul>
                 <SubtaskList value={task.subtasks}/>
                 <StoriesList value={stories}/>
@@ -54,6 +55,7 @@ export const query = graphql`
       }
       components {
         name
+        description
       }
     }
     epic: task(key: {eq: $epicKey}) {
@@ -65,6 +67,7 @@ export const query = graphql`
             node {
                 id
                 summary
+                project
             }
         }
     }

@@ -5,13 +5,13 @@ class StoriesList extends React.Component {
         if (this.props.value.length > 0) {
             return (
                 <div>
-                    <h2>Stories</h2>
+                    <h3 style={{marginBottom: 10,marginTop:15}}>Stories</h3>
                     <ul>
                         {this.props.value.map((task, i) => {
                             const taskNode = task.node;
                             return (
                                 <li key={i}>
-                                    <a href={taskNode.id}>{taskNode.summary}</a>
+                                    <a href={taskNode.id}>{taskNode.project} - {taskNode.summary}</a>
                                 </li>
                             )
                         })}
