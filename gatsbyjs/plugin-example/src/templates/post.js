@@ -1,4 +1,7 @@
 import React from "react";
+import EpicListItem from "../components/epic-list-item";
+import StoriesList from "../components/stories-list";
+import SubtaskList from "../components/subtask-list";
 
 export default ({ data }) => {
     const task = data.task;
@@ -9,35 +12,22 @@ export default ({ data }) => {
     }
     return (
         <div>
-            <h1>{task.summary}</h1>
-            <ul>
-                <li>{task.type}</li>
-                <li><a href={'https://timetopretend.atlassian.net/browse/' + task.key} target='_blank'>{task.key}</a></li>
-                <li>{task.project}</li>
-                <li>{task.priority}</li>
-                <li>{task.status}</li>
-                <li>{task.components.map((component, i) => { return component.name + " " })}</li>
-                <li>{task.labels.map((label, i) => { return label + " " })}</li>
-                <li>{task.description}</li>
-                {epic != null ? <li>Epic: <a href={epic.id}>{epic.summary}</a></li> : ''}
-                {task.subtasks.length > 0 ? (<li>Subtasks</li>) : ("")}
+            {epic != null ? <a href={epic.id}>{epic.summary}</a> : ""}
+            <h1 style={{marginBottom: 5}}>{task.summary}</h1>
+            <div>{task.project + " " + task.type}</div>
+            <div>
+                <h2 style={{marginBottom: 5,marginTop:10}}>Description</h2>
+                {task.description}
                 <ul>
-                    {task.subtasks.map((task, i) => {
-                        return <li key={i}>{task.fields.status.name + " - " + task.fields.summary}</li>;
-                    })}
+                    <li><a href={'https://timetopretend.atlassian.net/browse/' + task.key} target='_blank'>{task.key}</a></li>
+                    <li>{task.priority}</li>
+                    <li>{task.status}</li>
+                    <li>{task.components.map((component, i) => { return component.name + " " })}</li>
+                    <li>{task.labels.map((label, i) => { return label + " " })}</li>
                 </ul>
-                {stories.length > 0 ? (<li>Stories</li>) : ("")}
-                <ul>
-                    {stories.map((task, i) => {
-                        const taskNode = task.node;
-                        return (
-                        <li key={i}>
-                            <a href={taskNode.id}>{taskNode.summary}</a>
-                        </li>
-                        )
-                    })}
-                </ul>
-            </ul>
+                <SubtaskList value={task.subtasks}/>
+                <StoriesList value={stories}/>
+            </div>
         </div>
     );
 };
