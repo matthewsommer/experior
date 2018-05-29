@@ -10,12 +10,12 @@ const IndexPage = (props) => {
   return (
     <div>
       {tasks.map((task, i) => {
-        const taskData = task.node;
+        const taskNode = task.node;
         return (
           <div key={i}>
-            <h4>{taskData.summary}</h4>
-            <p>{taskData.author}</p>
-            <p>{taskData.description}</p>
+            <a href={taskNode.id}><h4>{taskNode.summary}</h4></a>
+            <p>{taskNode.author}</p>
+            <p>{taskNode.description}</p>
           </div>
         )
       })}
@@ -26,7 +26,7 @@ const IndexPage = (props) => {
 export default IndexPage
 
 export const query = graphql`
-    query TaskQuery {
+    query AllTasksQuery {
       allTask {
         edges {
           node {

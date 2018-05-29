@@ -8,6 +8,51 @@
 
 const axios = require('axios');
 const crypto = require('crypto');
+const { createFilePath } = require('gatsby-source-filesystem');
+const path = require(`path`);
+
+// exports.onCreateNode = ({ node, getNode, boundActionCreators }) => {
+//     if (node.internal.type === `Task`) {
+//         const { createNodeField } = boundActionCreators;
+//         const slug = createFilePath({ node, getNode, basePath: `pages` });
+//         createNodeField({
+//             node,
+//             name: `slug`,
+//             value: slug,
+//         });
+//     }
+// };
+
+exports.createPages = ({ graphql, boundActionCreators }) => {
+    const { createPage } = boundActionCreators;
+    return new Promise((resolve, reject) => {
+        graphql(`
+        {
+          allTask {
+            edges {
+              node {
+                id
+                epic
+              }
+            }
+          }
+        }
+      `).then(result => {
+                result.data.allTask.edges.map(({ node }) => {
+                    createPage({
+                        path: node.id,
+                        component: path.resolve(`./src/templates/post.js`),
+                        context: {
+                            // Data passed to context is available in page queries as GraphQL variables.
+                            slug: node.id,
+                            epicKey: node.epic
+                        },
+                    });
+                });
+                resolve();
+            });
+    });
+};
 
 exports.sourceNodes = async ({ boundActionCreators }) => {
     const { createNode } = boundActionCreators;
@@ -34,28 +79,36 @@ exports.sourceNodes = async ({ boundActionCreators }) => {
         // Create your node object
         const taskNode = {
             // Required fields
-            id: `${i}`,
-            parent: `__SOURCE__`,
+            id: '${i}',
+            parent: '__SOURCE__',
             internal: {
-                type: `Task`, // name of the graphQL query --> allTask {}
+                type: 'Task', // name of the graphQL query --> allTask {}
                 // contentDigest will be added just after
                 // but it is required
             },
             children: [],
             id: task.id,
+            key: task.key,
+            type: task.fields.issuetype.name,
+            description: task.fields.description,
             summary: task.fields.summary,
-            project: task.fields.project.name
+            status: task.fields.status.name,
+            labels: task.fields.labels,
+            components: task.fields.components,
+            priority: task.fields.priority.name,
+            project: task.fields.project.name,
+            author: task.fields.customfield_10100,
+            epic: task.fields.customfield_10009,
+            subtasks: task.fields.subtasks
         }
 
         // Get content digest of node. (Required field)
         const contentDigest = crypto
-            .createHash(`md5`)
+            .createHash('md5')
             .update(JSON.stringify(taskNode))
-            .digest(`hex`);
+            .digest('hex');
         // add it to taskNode
         taskNode.internal.contentDigest = contentDigest;
-        taskNode.description = task.fields.description;
-        taskNode.author = task.fields.customfield_10100;
 
         // Create node with the gatsby createNode() API
         createNode(taskNode);
