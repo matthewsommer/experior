@@ -24,11 +24,15 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
                 key
                 summary
                 slug
+                project
               }
             }
           }
         }
       `).then(result => {
+                // var projects = $.unique(result.data.allTask.edges.map(function (task) {return task.project;}));
+                // projects.reverse();
+                // console.log(projects);
                 result.data.allTask.edges.map(({ node }) => {
                     createPage({
                         path: node.slug,
@@ -42,6 +46,17 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
                         },
                     });
                 });
+                let set = new Set();
+                result.data.allTask.edges.map(({ node }) => { return set.add(node.project)});
+                for (let project of set) {
+                    createPage({
+                        path: project.replace(/[^\w\s]/gi,'').replace(/\s+/g, '-').toLowerCase(),
+                        component: path.resolve(`./src/templates/task-list.js`),
+                        context: {
+                            project: project
+                        },
+                    });
+                }
                 resolve();
             });
     });
@@ -93,7 +108,7 @@ exports.sourceNodes = async ({ boundActionCreators }) => {
             author: task.fields.customfield_10100,
             epic: task.fields.customfield_10009,
             subtasks: task.fields.subtasks,
-            slug: task.fields.summary.replace(/[^\w\s]/gi,'').replace(/\s+/g, '-').toLowerCase()
+            slug: task.fields.project.name.replace(/[^\w\s]/gi,'').replace(/\s+/g, '-').toLowerCase() + "/" + task.fields.summary.replace(/[^\w\s]/gi,'').replace(/\s+/g, '-').toLowerCase()
         }
 
         // Get content digest of node. (Required field)

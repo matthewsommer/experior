@@ -6,19 +6,31 @@ const axios = require('axios');
 
 const IndexPage = (props) => {
   const tasks = props.data.allTask.edges;
+  let projects = new Set();
+  tasks.map(({ node }) => { return projects.add(node.project) });
+
+  let types = new Set();
+  tasks.map(({ node }) => { return types.add(node.type) });
 
   return (
     <div>
-      {tasks.map((task, i) => {
-        const taskNode = task.node;
+      {Array.from(projects).sort().map((project, i) => {
         return (
           <div key={i}>
-            <a href={taskNode.slug}><h4>{taskNode.summary}</h4></a>
-            <p>{taskNode.author}</p>
-            <p>{taskNode.description}</p>
+            <a href={project.replace(/[^\w\s]/gi, '').replace(/\s+/g, '-').toLowerCase()}>{project}</a>
           </div>
         )
       })}
+      <br/><br/>
+      <div>
+        {Array.from(types).sort().map((type, i) => {
+          return (
+            <div key={i}>
+              <a href={type.replace(/[^\w\s]/gi, '').replace(/\s+/g, '-').toLowerCase()}>{type}</a>
+            </div>
+          )
+        })}
+      </div>
     </div>
   );
 };
@@ -36,6 +48,7 @@ export const query = graphql`
             project
             author
             slug
+            type
           }
         }
       }

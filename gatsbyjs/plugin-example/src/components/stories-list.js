@@ -11,7 +11,7 @@ class StoriesList extends React.Component {
                             const taskNode = task.node;
                             return (
                                 <li key={i}>
-                                    <a href={taskNode.slug}>{taskNode.project} - {taskNode.summary}</a>
+                                    <a href={'../' + taskNode.slug}>{taskNode.project} - {taskNode.summary}</a>
                                 </li>
                             )
                         })}

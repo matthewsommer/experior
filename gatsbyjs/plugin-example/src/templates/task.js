@@ -12,7 +12,7 @@ export default ({ data }) => {
     }
     return (
         <div>
-            {epic != null ? <a href={epic.slug}>{epic.summary}</a> : ""}
+            {epic != null ? <a href={'../' + epic.slug}>{epic.summary}</a> : ""}
             <h1 style={{marginBottom: 10}}>{task.summary}</h1>
             <div>{task.project + " " + task.type}</div>
             <div>

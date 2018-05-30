@@ -1,11 +1,7 @@
-import React from 'react'
-import Link from 'gatsby-link'
-import GatsbyJiraSource from 'gatsby-jira-source'
+import React from "react";
 
-const axios = require('axios');
-
-const EpicsPage = (props) => {
-    const tasks = props.data.epics.edges;
+const TaskList = (props) => {
+    const tasks = props.data.allTask.edges;
 
     return (
         <div>
@@ -23,19 +19,21 @@ const EpicsPage = (props) => {
     );
 };
 
-export default EpicsPage
+export default TaskList
 
 export const query = graphql`
-    query EpicsQuery {
-        epics: allTask(filter: {type: {eq: "Epic"}}) {
-            edges {
-                node {
-                id
-                summary
-                project
-                slug
-                }
-            }
+    query TasksByComponentFilter($project: String!) {
+      allTask(filter: {project: {eq: $project}}) {
+        edges {
+          node {
+            id
+            summary
+            description
+            project
+            author
+            slug
+          }
         }
+      }
     }
   `;
