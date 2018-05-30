@@ -12,7 +12,7 @@ export default ({ data }) => {
     }
     return (
         <div>
-            {epic != null ? <a href={epic.id}>{epic.summary}</a> : ""}
+            {epic != null ? <a href={epic.slug}>{epic.summary}</a> : ""}
             <h1 style={{marginBottom: 10}}>{task.summary}</h1>
             <div>{task.project + " " + task.type}</div>
             <div>
@@ -23,7 +23,7 @@ export default ({ data }) => {
                     <li><a href={'https://timetopretend.atlassian.net/browse/' + task.key} target='_blank'>Jira Link: {task.key}</a></li>
                     <li><b>Priority:</b> {task.priority}</li>
                     <li><b>Status:</b> {task.status}</li>
-                    <li><b>Components:</b> {task.components.map((component, i) => { return (<a href={component.description} target='_blank'>{component.name}, </a>) })}</li>
+                    <li><b>Components:</b> {task.components.map((component, i) => { return (<a href={component.description} target='_blank' key={i}>{component.name}, </a>) })}</li>
                     <li><b>Labels:</b> {task.labels.map((label, i) => { return label + " " })}</li>
                 </ul>
                 <SubtaskList value={task.subtasks}/>
@@ -34,8 +34,8 @@ export default ({ data }) => {
 };
 
 export const query = graphql`
-  query TaskQuery($slug: String!, $epicKey: String, $key: String) {
-    task(id: { eq: $slug }) {
+  query TaskQuery($id: String!, $epicKey: String, $key: String) {
+    task(id: { eq: $id }) {
       key
       type
       project
@@ -61,6 +61,7 @@ export const query = graphql`
     epic: task(key: {eq: $epicKey}) {
         id
         summary
+        slug
     }
     stories: allTask(filter: {epic: {eq: $key}}) {
         edges {
@@ -68,6 +69,7 @@ export const query = graphql`
                 id
                 summary
                 project
+                slug
             }
         }
     }

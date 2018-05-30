@@ -11,18 +11,6 @@ const crypto = require('crypto');
 const { createFilePath } = require('gatsby-source-filesystem');
 const path = require(`path`);
 
-// exports.onCreateNode = ({ node, getNode, boundActionCreators }) => {
-//     if (node.internal.type === `Task`) {
-//         const { createNodeField } = boundActionCreators;
-//         const slug = createFilePath({ node, getNode, basePath: `pages` });
-//         createNodeField({
-//             node,
-//             name: `slug`,
-//             value: slug,
-//         });
-//     }
-// };
-
 exports.createPages = ({ graphql, boundActionCreators }) => {
     const { createPage } = boundActionCreators;
     return new Promise((resolve, reject) => {
@@ -34,6 +22,8 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
                 id
                 epic
                 key
+                summary
+                slug
               }
             }
           }
@@ -41,13 +31,14 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
       `).then(result => {
                 result.data.allTask.edges.map(({ node }) => {
                     createPage({
-                        path: node.id,
-                        component: path.resolve(`./src/templates/post.js`),
+                        path: node.slug,
+                        component: path.resolve(`./src/templates/task.js`),
                         context: {
                             // Data passed to context is available in page queries as GraphQL variables.
-                            slug: node.id,
+                            slug: node.slug,
                             key: node.key,
-                            epicKey: (node.epic != null ? node.epic : "")
+                            epicKey: (node.epic != null ? node.epic : ""),
+                            id: node.id
                         },
                     });
                 });
@@ -101,7 +92,8 @@ exports.sourceNodes = async ({ boundActionCreators }) => {
             project: task.fields.project.name,
             author: task.fields.customfield_10100,
             epic: task.fields.customfield_10009,
-            subtasks: task.fields.subtasks
+            subtasks: task.fields.subtasks,
+            slug: task.fields.summary.replace(/[^\w\s]/gi,'').replace(/\s+/g, '-').toLowerCase()
         }
 
         // Get content digest of node. (Required field)

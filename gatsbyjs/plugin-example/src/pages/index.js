@@ -13,7 +13,7 @@ const IndexPage = (props) => {
         const taskNode = task.node;
         return (
           <div key={i}>
-            <a href={taskNode.id}><h4>{taskNode.summary}</h4></a>
+            <a href={taskNode.slug}><h4>{taskNode.summary}</h4></a>
             <p>{taskNode.author}</p>
             <p>{taskNode.description}</p>
           </div>
@@ -35,6 +35,7 @@ export const query = graphql`
             description
             project
             author
+            slug
           }
         }
       }
