@@ -5,11 +5,12 @@
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
     "axios": "^0.18.0",
-    "gatsby": "^1.9.261",
-    "gatsby-jira-source": "gatsby-jira-source",
+    "gatsby": "^1.9.262",
+    "gatsby-cli": "^1.1.53",
     "gatsby-link": "^1.6.44",
     "gatsby-plugin-react-helmet": "^2.0.11",
     "gatsby-source-filesystem": "^1.5.36",
+    "gatsby-source-jira": "file:../../../gatsby-source-jira",
     "react-helmet": "^5.2.0"
   },
   "keywords": [
@@ -23,6 +24,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "prettier": "^1.13.0"
+    "prettier": "^1.13.3"
+  },
+  "engines": {
+    "yarn": "YARN NO LONGER USED - use npm instead."
   }
 }
