@@ -27,13 +27,19 @@ export default EpicsPage
 
 export const query = graphql`
     query EpicsQuery {
-        epics: allTask(filter: {type: {eq: "Epic"}}) {
+        epics: allJiraIssue(filter: {type: {eq: "Epic"}}) {
             edges {
                 node {
-                id
-                summary
-                project
-                slug
+                    slug
+                    jiraIssue {
+                        id
+                        jiraFields {
+                            summary
+                            project {
+                                name
+                            }
+                        }
+                    }
                 }
             }
         }

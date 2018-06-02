@@ -5,12 +5,16 @@ import GatsbyJiraSource from 'gatsby-jira-source'
 const axios = require('axios');
 
 const IndexPage = (props) => {
-  const tasks = props.data.allTask.edges;
+  const tasks = props.data.allJiraIssue.edges;
+
   let projects = new Set();
-  tasks.map(({ node }) => { return projects.add(node.project) });
+  tasks.map(({ node }) => { return projects.add(node.jiraIssue.jiraFields.project.name) });
 
   let types = new Set();
-  tasks.map(({ node }) => { return types.add(node.type) });
+  tasks.map(({ node }) => { return types.add(node.jiraIssue.jiraFields.issuetype.name) });
+
+  let statuss = new Set();
+  tasks.map(({ node }) => { return statuss.add(node.jiraIssue.jiraFields.status.name) });
 
   return (
     <div>
@@ -23,10 +27,20 @@ const IndexPage = (props) => {
       })}
       <br/><br/>
       <div>
-        {Array.from(types).sort().map((type, i) => {
+        {Array.from(types).sort().map((type, k) => {
           return (
-            <div key={i}>
+            <div key={k}>
               <a href={type.replace(/[^\w\s]/gi, '').replace(/\s+/g, '-').toLowerCase()}>{type}</a>
+            </div>
+          )
+        })}
+      </div>
+      <br/><br/>
+      <div>
+        {Array.from(statuss).sort().map((status, j) => {
+          return (
+            <div key={j}>
+              <a href={status.replace(/\s+/g, '-').toLowerCase()}>{status}</a>
             </div>
           )
         })}
@@ -39,16 +53,26 @@ export default IndexPage
 
 export const query = graphql`
     query AllTasksQuery {
-      allTask {
+      allJiraIssue {
         edges {
           node {
-            id
-            summary
-            description
-            project
-            author
-            slug
-            type
+              slug
+              jiraIssue {
+                  id
+                  jiraFields {
+                      summary
+                      description
+                      project {
+                          name
+                      }
+                      issuetype {
+                        name
+                      }
+                      status {
+                        name
+                      }
+                  }
+              }
           }
         }
       }

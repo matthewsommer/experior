@@ -1,10 +1,13 @@
 module.exports = {
   siteMetadata: {
-    title: 'Gatsby Default Starter',
+    title: 'Jira REST Client',
   },
   plugins: [
     'gatsby-plugin-react-helmet', 
     {
-      resolve: "gatsby-source-jira"
+      resolve: "gatsby-source-jira",
+      options: {
+        host: "jira.mattsommer.io",
+      },
     }]
 }

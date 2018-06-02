@@ -8,10 +8,10 @@ class StoriesList extends React.Component {
                     <h3 style={{marginBottom: 10,marginTop:15}}>Stories</h3>
                     <ul>
                         {this.props.value.map((task, i) => {
-                            const taskNode = task.node;
+                            const taskNode = task.node.jiraIssue;
                             return (
                                 <li key={i}>
-                                    <a href={'../' + taskNode.slug}>{taskNode.project} - {taskNode.summary}</a>
+                                    <a href={'../' + task.node.slug}>{taskNode.jiraFields.project.name} - {taskNode.jiraFields.summary}</a>
                                 </li>
                             )
                         })}

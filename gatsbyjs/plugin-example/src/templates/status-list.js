@@ -20,8 +20,8 @@ const TaskList = (props) => {
 export default TaskList
 
 export const query = graphql`
-    query TaskFilter($project: String!) {
-        allJiraIssue(filter: {project: {eq: $project}}) {
+    query TaskStatusFilter($status: String!) {
+    allJiraIssue(filter: {status: {eq: $status}}) {
         edges {
             node {
                 slug
@@ -29,17 +29,16 @@ export const query = graphql`
                     id
                     jiraFields {
                         summary
-                        description
                         project {
                             name
                         }
-                        issuetype {
-                          name
+                        status {
+                            name
                         }
                     }
                 }
             }
-          }
+        }
       }
     }
   `;
