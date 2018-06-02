@@ -6,6 +6,7 @@
 
 // You can delete this file if you're not using it
 
+// I think this might not be need here...
 const { createFilePath } = require('gatsby-source-filesystem');
 const path = require(`path`);
 
