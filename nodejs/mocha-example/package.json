@@ -4,11 +4,13 @@
   "description": "A simple mocha example",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ejs": "^2.6.1",
     "express": "^4.16.3",
     "mocha": "^5.1.1"
   }
