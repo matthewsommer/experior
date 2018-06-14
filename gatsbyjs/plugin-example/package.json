@@ -9,8 +9,8 @@
     "gatsby-cli": "^1.1.53",
     "gatsby-link": "^1.6.44",
     "gatsby-plugin-react-helmet": "^2.0.11",
-    "gatsby-source-filesystem": "^1.5.36",
-    "gatsby-source-jira": "file:../../../gatsby-source-jira",
+    "gatsby-source-filesystem": "^1.5.38",
+    "gatsby-source-jira": "^1.0.0",
     "react-helmet": "^5.2.0"
   },
   "keywords": [
