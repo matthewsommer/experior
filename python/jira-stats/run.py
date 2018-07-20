@@ -1,59 +1,104 @@
 import requests
-import getpass
+from collections import Counter
+import os
+import json
+import urllib
 
-print('\n\n*******************    Jira Stats Generator    **********************\n\n')
+# Set username and password in .netrc file to authenticate, for example:
+# machine hostname123 login username123 password password123
+# Set environment variable 'jira_host' to host for example jira.atlassian.net
 
-host = 'https://' + raw_input("Jira Host: ") + '/rest/api/2/'
-rest_path = ""
-jql = '?jql=' + raw_input("JQL: ")
+print('\n\n*******************    Jira Stats Generator    **********************\n')
 
-search = host + 'search' + jql + '&fields=summary'
-fields = host + 'field'
-filters = host + 'filter'
-dashboard = host + 'dashboard'
-issuetype = host + 'issuetype'
-project = host + 'project'
-priority = host + 'priority'
-projectCategory = host + 'projectCategory'
-status = host + 'status'
-workflow = host + 'workflow'
+host = os.environ['jira_host']
 
-user = raw_input("Username:")
-passwd = getpass.getpass('Password:')
+base_url = 'https://' + host + '/rest/api/2/'
+print('Jira Host REST URL: ' + base_url)
+fields = base_url + 'field'
+filters = base_url + 'filter'
+dashboard = base_url + 'dashboard'
+issuetype = base_url + 'issuetype'
+project = base_url + 'project'
+priority = base_url + 'priority'
+projectCategory = base_url + 'projectCategory'
+status = base_url + 'status'
+workflow = base_url + 'workflow'
 
-print('\n*******************    Issues    **********************')
 
-data = requests.get(search, auth=(user, passwd)).json()
-total = data['total']
+def search(jql=''):
+    print("Starting Jira REST API Search - '" + jql + "'")
+    issues = []
+    current_page = 0
+    total_pages = 1  # There is at least 1 page to return even if 0 results
+    page_size = 100  # Results per page
 
-print('Total Issues: ' + str(total))
-print('\n*******************    Fields    **********************')
+    while current_page < total_pages:
+        payload = {'jql': jql, 'startAt': current_page * page_size, 'maxResults': page_size}
+        data = requests.get(base_url + "search?", params=payload, auth=()).json()
+        issues = data['issues'] + issues
+        total_pages = int(data['total'] / page_size) + (data['total'] % page_size > 0)
+        current_page += 1
 
-data = requests.get(fields, auth=(user, passwd)).json()
-total = len(data)
+    print("Finished Jira REST API Search - " + str(len(issues)) + ' Results\n')
+    return issues
 
-print('Total Fields: ' + str(total))
-print('\n*******************    Filters    **********************')
 
-data = requests.get(filters, auth=(user, passwd)).json()
-total = len(data)
+print('\n*******************    Issues    **********************\n')
 
-print('Total Filters: ' + str(total))
-print('\n*******************    Workflows    **********************')
+allIssues = search('issuetype = "Blog Post"')
 
-data = requests.get(workflow, auth=(user, passwd)).json()
-total = len(data)
-print('Total Workflows: ' + str(total))
+with open('/tmp/jira-export-data.json', 'w') as f:
+    json.dump(allIssues, f, ensure_ascii=False)
 
-print('\n*******************    Status\'    **********************')
+statuses = Counter(issue['fields']['status']['name'] for issue in allIssues).most_common()
+print(statuses)
 
-data = requests.get(status, auth=(user, passwd)).json()
-total = len(data)
-print('Total Status\': ' + str(total))
+issuetypes = Counter(issue['fields']['issuetype']['name'] for issue in allIssues).most_common()
+print(issuetypes)
 
-print('\n*******************    Projects\'    **********************')
+priorities = Counter(
+    issue['fields']['priority']['name'] for issue in allIssues if issue['fields']['priority'] is not None).most_common()
+print(priorities)
 
-data = requests.get(project, auth=(user, passwd)).json()
-total = len(data)
-print('Total Projects: ' + str(total))
-print('\n\n\n\n\n')
+projects = Counter(issue['fields']['project']['name'] for issue in allIssues).most_common()
+print(projects)
+
+resolutions = Counter(issue['fields']['resolution']['name'] for issue in allIssues if issue['fields']['resolution'] is not None).most_common()
+print(resolutions)
+
+assignees = Counter(issue['fields']['assignee']['displayName'] for issue in allIssues if issue['fields']['assignee'] is not None).most_common()
+print(assignees)
+
+reporters = Counter(issue['fields']['reporter']['displayName'] for issue in allIssues if issue['fields']['reporter'] is not None).most_common()
+print(reporters)
+
+# print('\n*******************    Fields    **********************')
+#
+# data = requests.get(fields, auth=(user, passwd)).json()
+# total = len(data)
+#
+# print('Total Fields: ' + str(total))
+# print('\n*******************    Filters    **********************')
+#
+# data = requests.get(filters, auth=(user, passwd)).json()
+# total = len(data)
+#
+# print('Total Filters: ' + str(total))
+# print('\n*******************    Workflows    **********************')
+#
+# data = requests.get(workflow, auth=(user, passwd)).json()
+# total = len(data)
+# print('Total Workflows: ' + str(total))
+#
+# print('\n*******************    Status\'    **********************')
+#
+# data = requests.get(status, auth=(user, passwd)).json()
+# total = len(data)
+# print('Total Status\': ' + str(total))
+#
+# print('\n*******************    Projects\'    **********************')
+#
+# data = requests.get(project, auth=(user, passwd)).json()
+# total = len(data)
+# print('Total Projects: ' + str(total))
+# print('\n\n\n\n\n')
