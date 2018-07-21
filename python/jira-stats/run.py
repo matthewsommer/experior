@@ -6,6 +6,7 @@ import urllib
 
 # Set username and password in .netrc file to authenticate, for example:
 # machine hostname123 login username123 password password123
+# Storing passwords in plain text is not secure, avoid keeping passwords in there
 # Set environment variable 'jira_host' to host for example jira.atlassian.net
 
 print('\n\n*******************    Jira Stats Generator    **********************\n')
@@ -39,38 +40,36 @@ def search(jql=''):
         total_pages = int(data['total'] / page_size) + (data['total'] % page_size > 0)
         current_page += 1
 
-    print("Finished Jira REST API Search - " + str(len(issues)) + ' Results\n')
+    print("Finished Jira REST API Search - " + str(len(issues)) + ' Results')
     return issues
 
 
-print('\n*******************    Issues    **********************\n')
+def counts(field_name):
+    print('\n*' + field_name + ' counts:')
+    counts = Counter(
+        issue['fields'][field_name]['name'] for issue in allIssues if
+        issue['fields'][field_name] is not None).most_common()
+    for value, count in counts:
+        print(value, count)
 
-allIssues = search('issuetype = "Blog Post"')
+print('\n*******************    Issues    **********************')
 
-with open('/tmp/jira-export-data.json', 'w') as f:
-    json.dump(allIssues, f, ensure_ascii=False)
+allIssues = search('')
 
-statuses = Counter(issue['fields']['status']['name'] for issue in allIssues).most_common()
-print(statuses)
+# with open('/tmp/jira-export-data.json', 'w') as f:
+#     json.dump(allIssues, f, ensure_ascii=False)
 
-issuetypes = Counter(issue['fields']['issuetype']['name'] for issue in allIssues).most_common()
-print(issuetypes)
+counts('status')
+counts('issuetype')
+counts('priority')
+counts('project')
+counts('resolution')
+counts('assignee')
+counts('reporter')
 
-priorities = Counter(
-    issue['fields']['priority']['name'] for issue in allIssues if issue['fields']['priority'] is not None).most_common()
-print(priorities)
-
-projects = Counter(issue['fields']['project']['name'] for issue in allIssues).most_common()
-print(projects)
-
-resolutions = Counter(issue['fields']['resolution']['name'] for issue in allIssues if issue['fields']['resolution'] is not None).most_common()
-print(resolutions)
-
-assignees = Counter(issue['fields']['assignee']['displayName'] for issue in allIssues if issue['fields']['assignee'] is not None).most_common()
-print(assignees)
-
-reporters = Counter(issue['fields']['reporter']['displayName'] for issue in allIssues if issue['fields']['reporter'] is not None).most_common()
-print(reporters)
+unresolved = Counter(
+    issue['fields']['resolution'] for issue in allIssues if issue['fields']['resolution'] is None).most_common()
+print(unresolved)
 
 # print('\n*******************    Fields    **********************')
 #
