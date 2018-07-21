@@ -1,8 +1,6 @@
 import requests
 from collections import Counter
 import os
-import json
-import urllib
 
 # Set username and password in .netrc file to authenticate, for example:
 # machine hostname123 login username123 password password123
