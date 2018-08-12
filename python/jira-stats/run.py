@@ -1,6 +1,7 @@
 import requests
 from collections import Counter
 import os
+import json
 
 # Set username and password in .netrc file to authenticate, for example:
 # machine hostname123 login username123 password password123
@@ -32,10 +33,13 @@ def search(jql=''):
     page_size = 100  # Results per page
 
     while current_page < total_pages:
-        payload = {'jql': jql, 'startAt': current_page * page_size, 'maxResults': page_size}
+        payload = {'jql': jql, 'startAt': current_page * page_size, 'maxResults': page_size, fields: 'status,issuetype,priority,project,resolution,assignee,reporter'}
         data = requests.get(base_url + "search?", params=payload, auth=()).json()
-        issues = data['issues'] + issues
-        total_pages = int(data['total'] / page_size) + (data['total'] % page_size > 0)
+        if 'issues' in data:
+            issues = data['issues'] + issues
+        if 'total' in data:
+            total_pages = int(data['total'] / page_size) + (data['total'] % page_size > 0)
+        print('Page ' + str(current_page) + ' of ' + str(total_pages))
         current_page += 1
 
     print("Finished Jira REST API Search - " + str(len(issues)) + ' Results')
@@ -46,16 +50,18 @@ def counts(field_name):
     print('\n*' + field_name + ' counts:')
     counts = Counter(
         issue['fields'][field_name]['name'] for issue in allIssues if
+        'fields' in issue and
+        field_name in issue['fields'] and
         issue['fields'][field_name] is not None).most_common()
     for value, count in counts:
         print(value, count)
 
 print('\n*******************    Issues    **********************')
 
-allIssues = search('')
+allIssues = search('issuetype in ("Engineering Change Request", "Simple Engineering Change Request")')
 
-# with open('/tmp/jira-export-data.json', 'w') as f:
-#     json.dump(allIssues, f, ensure_ascii=False)
+with open('/tmp/jira-export-data.json', 'w') as f:
+    json.dump(allIssues, f, ensure_ascii=False)
 
 counts('status')
 counts('issuetype')
